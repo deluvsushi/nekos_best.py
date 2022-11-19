@@ -3,9 +3,8 @@ from time import time
 from pathlib import Path
 from requests import get
 
-
 class NekosBest:
-	def __init__(self):
+	def __init__(self) -> None:
 		self.api = "https://nekos.best/api/v2"
 		self.headers = {
 			"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"
@@ -14,7 +13,7 @@ class NekosBest:
 	def save_file(
 			self,
 			content: bytes,
-			location: str = getcwd()):
+			location: str = getcwd()) -> bool:
 		with open(
 			Path(location).joinpath(f"{time() * 1000}.jpg"),
 		mode="wb+",
@@ -23,12 +22,15 @@ class NekosBest:
 			file.close()
 		return True
 
-	def get_endpoints(self):
+	def get_endpoints(self) -> dict:
 		return get(
 			f"{self.api}/endpoints",
 			headers=self.headers).json()
 	
-	def get_random_image(self, category: str, amount: int = 1):
+	def get_random_image(
+			self,
+			category: str,
+			amount: int = 1) -> dict:
 		return get(
 			f"{self.api}/{category}?amount={amount}",
 			headers=self.headers).json()
@@ -37,7 +39,7 @@ class NekosBest:
 			self,
 			query: str,
 			category: str,
-			amount: int = 1):
+			amount: int = 1) -> dict:
 		return get(
 			f"{self.api}/search?query={query}&type={type}&category={category}&amount={amount}",
 			headers=self.headers).json()
@@ -46,7 +48,7 @@ class NekosBest:
 			self,
 			category: str,
 			file_name: str,
-			format: str):
+			format: str) -> bool:
 		return self.save_file(get(
 			f"{self.api}/{category}/{file_name}.{format}",
 			headers=self.headers).content)
